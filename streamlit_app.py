@@ -35,7 +35,6 @@ REQUEST_TIMEOUT = 20
 # -----------------------------
 # Data helpers
 # -----------------------------
-@st.cache_data(show_spinner=False)
 def load_picks_csv(path_or_buffer) -> pd.DataFrame:
     last_error = None
 
@@ -93,6 +92,54 @@ def find_tier_columns(df: pd.DataFrame, friend_col: str) -> List[str]:
         return sorted(tier_like, key=lambda x: x.lower())[:5]
     remaining = [c for c in df.columns if c != friend_col]
     return remaining[:5]
+
+
+def coerce_picks_layout(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Supports both layouts:
+    1) Normal row format:
+       Friend | Tier 1 | Tier 2 | Tier 3 | Tier 4 | Tier 5
+    2) Transposed format:
+       Row 1 = friend names across columns
+       Row 2-6 = tier picks across columns
+    """
+    df = df.copy()
+    df = df.dropna(how="all")
+    df.columns = [str(c).strip() for c in df.columns]
+
+    if df.empty:
+        return df
+
+    # Already in expected format
+    if len(df.columns) >= 6 and len(df) >= 1:
+        friend_col = find_friend_column(df)
+        tier_cols = find_tier_columns(df, friend_col)
+        if len(tier_cols) >= 5 and len(df) > 1:
+            return df
+
+    # Try transposed layout conversion
+    # Expected shape like 6 rows x N friend columns, often with a blank top-left cell.
+    if len(df) >= 6 and len(df.columns) >= 2:
+        first_row = df.iloc[0].tolist()
+        friend_names = [str(x).strip() for x in first_row[1:] if str(x).strip() and str(x).strip().lower() != 'nan']
+        if friend_names:
+            converted_rows = []
+            for col_idx, friend_name in enumerate(friend_names, start=1):
+                converted_rows.append(
+                    {
+                        "Friend": friend_name,
+                        "Tier 1": df.iloc[1, col_idx] if len(df) > 1 and col_idx < len(df.columns) else None,
+                        "Tier 2": df.iloc[2, col_idx] if len(df) > 2 and col_idx < len(df.columns) else None,
+                        "Tier 3": df.iloc[3, col_idx] if len(df) > 3 and col_idx < len(df.columns) else None,
+                        "Tier 4": df.iloc[4, col_idx] if len(df) > 4 and col_idx < len(df.columns) else None,
+                        "Tier 5": df.iloc[5, col_idx] if len(df) > 5 and col_idx < len(df.columns) else None,
+                    }
+                )
+            converted = pd.DataFrame(converted_rows).dropna(how="all")
+            if not converted.empty:
+                return converted
+
+    return df
 
 
 def parse_score_text(raw: str) -> Optional[int]:
@@ -483,16 +530,14 @@ def render_leaderboard(friend_scores: pd.DataFrame) -> None:
 
 
 def render_friend_cards(friend_scores: pd.DataFrame) -> None:
-    st.subheader("Picks and current golfer scores")
     detail_df = flatten_pick_details(friend_scores)
     if detail_df.empty:
         st.info("No picks available to display.")
         return
 
     display_df = detail_df[["Friend", "Tier", "Golfer", "Current Score", "Raw Website Value"]].copy()
-    st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-    st.markdown("### By friend")
+    st.markdown("### Picks")
     for friend in friend_scores["Friend"].dropna().astype(str).tolist():
         one = display_df[display_df["Friend"] == friend].copy()
         if one.empty:
@@ -509,8 +554,7 @@ def main() -> None:
 
     st.title("Masters Pick'em Tracker")
     st.caption(
-        "Lowest cumulative golfer score wins. If a friend picked the eventual tournament winner, "
-        "that friend gets 5 strokes subtracted from their total."
+        "No Seba, ever."
     )
 
     with st.sidebar:
@@ -522,15 +566,20 @@ def main() -> None:
             "Expected CSV layout: first column = friend name, next five columns = Tier 1 through Tier 5 picks."
         )
         st.markdown("---")
+        # refresh_picks = st.button("Reload picks file")
         fetch_now = st.button("Pull latest Masters scores now", type="primary")
         st.write(f"Auto-refresh is set to every {POLL_MINUTES} minutes.")
         st.markdown("---")
         st.write("Scoring notes")
         st.write("- Lower total is better")
         st.write("- Winner bonus = -5, but only after the tournament is final")
+        st.write("- Missing Cut Penalty = +10, but later since i don't know how the hell this unnofficial API handles that")
         st.write("- Live score source = ESPN's unofficial PGA scoreboard JSON")
 
-        picks_source = None
+        #if refresh_picks:
+            #st.cache_data.clear()
+
+    picks_source = None
     try:
         if DEFAULT_PICKS_FILE.exists():
             picks_source = str(DEFAULT_PICKS_FILE)
@@ -552,7 +601,11 @@ def main() -> None:
                 pass
         return
 
-    st.caption(f"Loaded picks from: {picks_source} · rows: {len(picks_df)} · columns: {len(picks_df.columns)}")
+    picks_df = coerce_picks_layout(picks_df)
+    #st.caption(f"Loaded picks from: {picks_source} · rows: {len(picks_df)} · columns: {len(picks_df.columns)}")
+    st.caption(f" {', '.join(picks_df.iloc[:, 0].astype(str).tolist())}")
+    with st.expander("Detected picks table"):
+        st.dataframe(picks_df, use_container_width=True, hide_index=True)
 
     live_scores = load_latest_scores()
     status_placeholder = st.empty()
