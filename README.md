@@ -1,8 +1,6 @@
-# :earth_americas: GDP dashboard template
+# Masters leaderboard app
 
-A simple Streamlit app showing the GDP of different countries in the world.
-
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+A Streamlit app for tracking your bros group's Masters picks and ranking everyone by the combined score of their five selected golfers.
 
 ### How to run it on your own machine
 
@@ -17,3 +15,9 @@ A simple Streamlit app showing the GDP of different countries in the world.
    ```
    $ streamlit run streamlit_app.py
    ```
+
+### CSV format
+
+- Place a CSV file at `data/golf_picks.csv` or upload one from the sidebar.
+- Required columns: one player column and five golfer pick columns.
+- Optional columns: `Total Score` or individual score columns such as `Score 1`, `Score 2`, etc.
