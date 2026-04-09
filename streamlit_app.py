@@ -485,11 +485,20 @@ def render_leaderboard(friend_scores: pd.DataFrame) -> None:
 def render_friend_cards(friend_scores: pd.DataFrame) -> None:
     st.subheader("Picks and current golfer scores")
     detail_df = flatten_pick_details(friend_scores)
-    for friend in friend_scores["Friend"].tolist():
-        st.markdown(f"### {friend}")
-        one = detail_df[detail_df["Friend"] == friend][["Tier", "Golfer", "Current Score", "Raw Website Value"]]
-        st.dataframe(one, use_container_width=True, hide_index=True)
+    if detail_df.empty:
+        st.info("No picks available to display.")
+        return
 
+    display_df = detail_df[["Friend", "Tier", "Golfer", "Current Score", "Raw Website Value"]].copy()
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+    st.markdown("### By friend")
+    for friend in friend_scores["Friend"].dropna().astype(str).tolist():
+        one = display_df[display_df["Friend"] == friend].copy()
+        if one.empty:
+            continue
+        st.markdown(f"**{friend}**")
+        st.dataframe(one[["Tier", "Golfer", "Current Score", "Raw Website Value"]], use_container_width=True, hide_index=True)
 
 # -----------------------------
 # Main app
