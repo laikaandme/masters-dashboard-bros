@@ -12,6 +12,11 @@ import requests
 import streamlit as st
 from bs4 import BeautifulSoup
 
+try:
+    from streamlit_autorefresh import st_autorefresh
+except ImportError:  # pragma: no cover
+    st_autorefresh = None
+
 # -----------------------------
 # Page config
 # -----------------------------
@@ -384,6 +389,33 @@ def scores_changed(new_scores: Dict[str, GolferScore], old_scores: Dict[str, Gol
     return False
 
 
+def latest_scores_fetch_time(scores: Dict[str, GolferScore]) -> Optional[datetime]:
+    if not scores:
+        return None
+    parsed: List[datetime] = []
+    for item in scores.values():
+        if not item.fetched_at:
+            continue
+        raw = item.fetched_at.replace("Z", "+00:00")
+        try:
+            parsed.append(datetime.fromisoformat(raw))
+        except ValueError:
+            continue
+    if not parsed:
+        return None
+    return max(parsed)
+
+
+def scores_need_refresh(scores: Dict[str, GolferScore], poll_minutes: int) -> bool:
+    t = latest_scores_fetch_time(scores)
+    if t is None:
+        return True
+    if t.tzinfo is None:
+        t = t.replace(tzinfo=timezone.utc)
+    age = datetime.now(timezone.utc) - t.astimezone(timezone.utc)
+    return age.total_seconds() >= poll_minutes * 60
+
+
 # -----------------------------
 # Scoring logic
 # -----------------------------
@@ -474,14 +506,17 @@ def flatten_pick_details(friend_scores: pd.DataFrame) -> pd.DataFrame:
 # -----------------------------
 # UI helpers
 # -----------------------------
-def render_auto_refresh() -> None:
-    seconds = POLL_MINUTES * 60
+def schedule_full_rerun_interval(minutes: int) -> None:
+    """Periodic full script rerun so stale ESPN data can be pulled without user clicks."""
+    if st_autorefresh is not None:
+        st_autorefresh(interval=int(minutes * 60 * 1000), key="espn_poll_rerun")
+        return
+    ms = int(minutes * 60 * 1000)
     st.components.v1.html(
         f"""
         <script>
-        setTimeout(function() {{
-            window.parent.location.reload();
-        }}, {seconds * 1000});
+        const root = window.top || window.parent;
+        setTimeout(function () {{ root.location.reload(); }}, {ms});
         </script>
         """,
         height=0,
@@ -550,7 +585,7 @@ def render_friend_cards(friend_scores: pd.DataFrame) -> None:
 # -----------------------------
 def main() -> None:
     init_db()
-    render_auto_refresh()
+    schedule_full_rerun_interval(POLL_MINUTES)
 
     st.title("Masters Pick'em Tracker")
     st.caption(
@@ -611,7 +646,8 @@ def main() -> None:
     status_placeholder = st.empty()
     event_status = None
 
-    if fetch_now:
+    should_fetch = fetch_now or scores_need_refresh(live_scores, POLL_MINUTES)
+    if should_fetch:
         try:
             payload = fetch_espn_scoreboard()
             parsed_scores, event_status = extract_scores_from_espn(payload)
@@ -628,7 +664,8 @@ def main() -> None:
                     )
                 else:
                     live_scores = previous
-                    status_placeholder.info("Scores were unchanged, so no new history point was added.")
+                    if fetch_now:
+                        status_placeholder.info("Scores were unchanged, so no new history point was added.")
         except Exception as exc:
             status_placeholder.error(f"Failed to pull ESPN Masters scores: {exc}")
 
