@@ -37,6 +37,33 @@ POLL_MINUTES = 10
 WINNER_BONUS = -5
 REQUEST_TIMEOUT = 20
 
+# Qualitative palette (Tableau 10–style): distinct for many friends on one chart
+HISTORY_LINE_COLORS = [
+    "#4E79A7",
+    "#F28E2B",
+    "#59A14F",
+    "#E15759",
+    "#76B7B2",
+    "#EDC948",
+    "#B07AA1",
+    "#FF9DA7",
+    "#9C755F",
+    "#BAB0AC",
+]
+
+HISTORY_GRAPH_DEFAULT_HOURS = 6
+
+
+def _streamlit_theme_base() -> str:
+    try:
+        theme = getattr(st.context, "theme", None)
+        if theme is not None:
+            return str(getattr(theme, "base", "light") or "light").lower()
+    except Exception:
+        pass
+    return "light"
+
+
 # -----------------------------
 # Data helpers
 # -----------------------------
@@ -531,27 +558,125 @@ def render_history_graph(history_df: pd.DataFrame) -> None:
         return
 
     available = sorted(history_df["friend_name"].dropna().unique().tolist())
-    selected = st.multiselect("Show friends", available, default=available)
+    row1_col1, row1_col2 = st.columns([2, 1])
+    with row1_col1:
+        selected = st.multiselect("Show friends", available, default=available)
+    with row1_col2:
+        range_options = [
+            f"Last {HISTORY_GRAPH_DEFAULT_HOURS} hours",
+            "Last 24 hours",
+            "All time",
+        ]
+        range_hours_by_label = {
+            range_options[0]: HISTORY_GRAPH_DEFAULT_HOURS,
+            range_options[1]: 24,
+            range_options[2]: None,
+        }
+        time_range = st.selectbox("Time range", range_options, index=0)
+
     filtered = history_df[history_df["friend_name"].isin(selected)].copy()
     if filtered.empty:
         st.warning("Select at least one friend to display the graph.")
         return
 
     filtered = filtered.dropna(subset=["total_score"])
+    window_hours = range_hours_by_label[time_range]
+    if window_hours is not None:
+        cutoff = pd.Timestamp.now(tz="UTC") - pd.Timedelta(hours=window_hours)
+        plot_df = filtered[filtered["fetched_at"] >= cutoff].copy()
+        if plot_df.empty:
+            st.info(
+                f"No snapshots in the last {window_hours} hours. Choose **All time** or a wider range to see older data."
+            )
+            return
+    else:
+        plot_df = filtered
+
+    theme_dark = _streamlit_theme_base() == "dark"
+    if theme_dark:
+        grid = "rgba(255,255,255,0.12)"
+        spike = "rgba(255,255,255,0.2)"
+        axis_line = "rgba(255,255,255,0.22)"
+        tick_font = "rgba(255,255,255,0.78)"
+        title_font = "rgba(255,255,255,0.92)"
+        legend_bg = "rgba(0,0,0,0)"
+        legend_border = "rgba(255,255,255,0.18)"
+        marker_outline = "rgba(20,20,24,0.85)"
+    else:
+        grid = "rgba(0,0,0,0.08)"
+        spike = "rgba(0,0,0,0.18)"
+        axis_line = "rgba(0,0,0,0.18)"
+        tick_font = "rgba(49,51,63,0.82)"
+        title_font = "rgba(49,51,63,0.92)"
+        legend_bg = "rgba(0,0,0,0)"
+        legend_border = "rgba(0,0,0,0.12)"
+        marker_outline = "white"
+
+    friend_color_map = {
+        name: HISTORY_LINE_COLORS[i % len(HISTORY_LINE_COLORS)]
+        for i, name in enumerate(available)
+    }
+
     fig = px.line(
-        filtered,
+        plot_df,
         x="fetched_at",
         y="total_score",
         color="friend_name",
+        category_orders={"friend_name": available},
         markers=True,
+        color_discrete_map=friend_color_map,
         labels={
             "fetched_at": "Time",
             "total_score": "Total score",
             "friend_name": "Friend",
         },
     )
-    fig.update_yaxes(autorange="reversed")
-    fig.update_layout(hovermode="x unified")
+    fig.update_traces(
+        line=dict(width=2.4, shape="linear"),
+        marker=dict(size=7, line=dict(width=1, color=marker_outline)),
+        opacity=0.92,
+    )
+    fig.update_yaxes(
+        autorange="reversed",
+        gridcolor=grid,
+        zeroline=False,
+        linecolor=axis_line,
+        tickfont=dict(color=tick_font),
+        title=dict(font=dict(color=title_font)),
+    )
+    fig.update_xaxes(
+        gridcolor=grid,
+        showspikes=True,
+        spikecolor=spike,
+        linecolor=axis_line,
+        tickfont=dict(color=tick_font),
+        title=dict(font=dict(color=title_font)),
+    )
+    fig.update_layout(
+        template=None,
+        hovermode="closest",
+        font=dict(color=title_font),
+        legend=dict(
+            title=None,
+            orientation="v",
+            yanchor="top",
+            y=1,
+            xanchor="left",
+            x=1.01,
+            bgcolor=legend_bg,
+            bordercolor=legend_border,
+            borderwidth=1,
+            tracegroupgap=6,
+            itemsizing="constant",
+            font=dict(size=12, color=tick_font),
+        ),
+        margin=dict(l=48, r=168, t=24, b=48),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+    )
+    st.caption(
+        "Tip: click a name in the legend to hide/show that line; double-click a name to show only that person."
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
