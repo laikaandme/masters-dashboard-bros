@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import requests
 import streamlit as st
 from bs4 import BeautifulSoup
@@ -35,6 +36,7 @@ ESPN_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/sc
 TOURNAMENT_NAME = "Masters Tournament"
 POLL_MINUTES = 10
 WINNER_BONUS = -5
+MISS_CUT_PENALTY = 10
 REQUEST_TIMEOUT = 20
 
 # Qualitative palette (Tableau 10–style): distinct for many friends on one chart
@@ -52,6 +54,112 @@ HISTORY_LINE_COLORS = [
 ]
 
 HISTORY_GRAPH_DEFAULT_HOURS = 6
+
+# Official Masters pick pool: choose one player per tier (scores vs live ESPN field).
+TIER_LABELS = ["Tier 1", "Tier 2", "Tier 3", "Tier 4", "Tier 5"]
+MASTER_POOL_TIERS: List[List[str]] = [
+    [
+        "Scottie Scheffler",
+        "Bryson DeChambeau",
+        "Jon Rahm",
+        "Rory McIlroy",
+        "Xander Schauffele",
+        "Ludvig Åberg",
+        "Matt Fitzpatrick",
+        "Cameron Young",
+        "Tommy Fleetwood",
+        "Hideki Matsuyama",
+    ],
+    [
+        "Robert MacIntyre",
+        "Justin Rose",
+        "Min Woo Lee",
+        "Patrick Reed",
+        "Collin Morikawa",
+        "Si Woo Kim",
+        "Jordan Spieth",
+        "Brooks Koepka",
+        "Chris Gotterup",
+        "Russell Henley",
+    ],
+    [
+        "Nicolai Højgaard",
+        "Viktor Hovland",
+        "Akshay Bhatia",
+        "Maverick McNealy",
+        "Jake Knapp",
+        "Shane Lowry",
+        "Patrick Cantlay",
+        "Justin Thomas",
+        "Adam Scott",
+        "Jason Day",
+        "Sepp Straka",
+        "Tyrrell Hatton",
+        "Corey Conners",
+        "J.J. Spaun",
+        "Jacob Bridgeman",
+    ],
+    [
+        "Sam Burns",
+        "Harris English",
+        "Rasmus Højgaard",
+        "Cameron Smith",
+        "Marco Penge",
+        "Sungjae Im",
+        "Gary Woodland",
+        "Kurt Kitayama",
+        "Daniel Berger",
+        "Ben Griffin",
+        "Alex Noren",
+        "Ryan Gerard",
+        "Sam Stevens",
+        "Keegan Bradley",
+        "Harry Hall",
+    ],
+    [
+        "Aldrich Potgieter",
+        "Kristoffer Reitan",
+        "Max Homa",
+        "Ryan Fox",
+        "Casey Jarvis",
+        "Aaron Rai",
+        "Wyndham Clark",
+        "Brian Harman",
+        "Sergio Garcia",
+        "Dustin Johnson",
+        "Nicolas Echavarria",
+        "Carlos Ortiz",
+        "Michael Kim",
+        "Max Greyserman",
+        "Nick Taylor",
+        "Haotong Li",
+        "Matt McCarty",
+        "Rasmus Neergaard-Petersen",
+        "Andrew Novak",
+        "Tom McKibbin",
+        "Sami Valimaki",
+        "Michael Brennan",
+        "John Keefer",
+        "Bubba Watson",
+        "Charl Schwartzel",
+        "Zach Johnson",
+        "Davis Riley",
+        "Angel Cabrera",
+        "Mason Howell",
+        "Fifa Laopakdee",
+        "Ethan Fang",
+        "Brian Campbell",
+        "Vijay Singh",
+        "Jose Maria Olazabal",
+        "Brandon Holtz",
+        "Naoyuki Kataoka",
+        "Danny Willett",
+        "Jackson Herrington",
+        "Fred Couples",
+        "Mateo Pulcini",
+        "Mike Weir",
+    ],
+]
 
 
 def _streamlit_theme_base() -> str:
@@ -174,12 +282,45 @@ def coerce_picks_layout(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def raw_indicates_missed_cut(raw: str) -> bool:
+    """ESPN-style markers for missing the cut (Masters ~top 50 and ties)."""
+    if not raw:
+        return False
+    t = str(raw).strip().upper()
+    t = t.replace("−", "-")
+    if t in ("CUT", "MC", "MDF"):
+        return True
+    if "MISSED CUT" in t:
+        return True
+    if re.search(r"\b(CUT|MC|MDF)\b", t):
+        return True
+    return False
+
+
+def status_indicates_missed_cut(competitor: dict) -> bool:
+    st = competitor.get("status")
+    if not isinstance(st, dict):
+        return False
+    blob = f"{st.get('shortDetail', '')} {st.get('detail', '')}".upper()
+    return "MISSED CUT" in blob or "MISSED THE CUT" in blob
+
+
+def strip_cut_markers_for_score_parse(raw: str) -> str:
+    """Allow values like '+4 (CUT)' to still parse relative score."""
+    text = str(raw).strip().upper()
+    text = text.replace("−", "-")
+    text = re.sub(r"\s*[/|,]?\s*(MISSED\s+CUT|CUT|MC|MDF)\s*$", "", text, flags=re.I)
+    return text.strip()
+
+
 def parse_score_text(raw: str) -> Optional[int]:
     if raw is None:
         return None
     text = str(raw).strip().upper()
     text = text.replace("−", "-")
-    if text in {"", "--", "-", "WD", "DQ", "CUT"}:
+    if text in {"", "--", "-", "WD", "DQ"}:
+        return None
+    if text in {"CUT", "MC", "MDF"}:
         return None
     if text in {"E", "EVEN"}:
         return 0
@@ -195,6 +336,7 @@ class GolferScore:
     score: Optional[int]
     raw_value: str
     fetched_at: str
+    missed_cut: bool = False
 
 
 @dataclass
@@ -206,6 +348,14 @@ class EventStatus:
     detail: str
     completed: bool
     fetched_at: str
+
+
+@dataclass
+class TierComboResult:
+    optimal_total: int
+    worst_total: int
+    optimal_picks: List[Tuple[str, str, int]]
+    worst_picks: List[Tuple[str, str, int]]
 
 
 # -----------------------------
@@ -251,6 +401,7 @@ def save_latest_scores(scores: Dict[str, GolferScore]) -> None:
             "score": v.score,
             "raw_value": v.raw_value,
             "fetched_at": v.fetched_at,
+            "missed_cut": v.missed_cut,
         }
         for k, v in scores.items()
     }
@@ -269,6 +420,7 @@ def load_latest_scores() -> Dict[str, GolferScore]:
                 score=v.get("score"),
                 raw_value=v.get("raw_value", ""),
                 fetched_at=v.get("fetched_at", ""),
+                missed_cut=bool(v.get("missed_cut", False)),
             )
             for k, v in raw.items()
         }
@@ -337,6 +489,78 @@ def load_friend_history() -> pd.DataFrame:
     return df
 
 
+def load_golfer_snapshot_history() -> pd.DataFrame:
+    conn = sqlite3.connect(DB_PATH)
+    query = "SELECT fetched_at, golfer_key, golfer_name, score FROM golfer_snapshots ORDER BY fetched_at"
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+    if df.empty:
+        return df
+    df["fetched_at"] = pd.to_datetime(df["fetched_at"], utc=True, errors="coerce")
+    return df
+
+
+def compute_tier_best_worst(
+    tier_lists: List[List[str]],
+    score_by_key: Dict[str, Tuple[int, str]],
+) -> Optional[TierComboResult]:
+    """Min / max possible total = sum of per-tier min / max (tiers are disjoint)."""
+    optimal_picks: List[Tuple[str, str, int]] = []
+    worst_picks: List[Tuple[str, str, int]] = []
+    opt_sum = 0
+    worst_sum = 0
+    for label, names in zip(TIER_LABELS, tier_lists):
+        keys = [normalize_name(n) for n in names]
+        scored: List[Tuple[str, int, str]] = []
+        for k in keys:
+            if k in score_by_key:
+                sc, disp = score_by_key[k]
+                scored.append((k, sc, disp))
+        if not scored:
+            return None
+        best = min(scored, key=lambda t: t[1])
+        worst = max(scored, key=lambda t: t[1])
+        optimal_picks.append((label, best[2], best[1]))
+        worst_picks.append((label, worst[2], worst[1]))
+        opt_sum += best[1]
+        worst_sum += worst[1]
+    return TierComboResult(
+        optimal_total=opt_sum,
+        worst_total=worst_sum,
+        optimal_picks=optimal_picks,
+        worst_picks=worst_picks,
+    )
+
+
+def build_tier_bounds_timeseries(golf_df: pd.DataFrame) -> pd.DataFrame:
+    if golf_df.empty:
+        return pd.DataFrame(columns=["fetched_at", "optimal_total", "worst_total"])
+    rows = []
+    for fetched_at, grp in golf_df.groupby("fetched_at", sort=True):
+        score_by_key: Dict[str, Tuple[int, str]] = {}
+        for _, r in grp.iterrows():
+            if pd.notna(r["score"]) and r["score"] is not None:
+                score_by_key[str(r["golfer_key"])] = (int(r["score"]), str(r["golfer_name"]))
+        res = compute_tier_best_worst(MASTER_POOL_TIERS, score_by_key)
+        if res is not None:
+            rows.append(
+                {
+                    "fetched_at": fetched_at,
+                    "optimal_total": res.optimal_total,
+                    "worst_total": res.worst_total,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def combo_result_from_live_scores(live_scores: Dict[str, GolferScore]) -> Optional[TierComboResult]:
+    score_by_key: Dict[str, Tuple[int, str]] = {}
+    for k, v in live_scores.items():
+        if v.score is not None:
+            score_by_key[k] = (v.score, v.display_name)
+    return compute_tier_best_worst(MASTER_POOL_TIERS, score_by_key)
+
+
 # -----------------------------
 # Masters scraping
 # -----------------------------
@@ -392,11 +616,15 @@ def extract_scores_from_espn(payload: dict) -> Tuple[Dict[str, GolferScore], Eve
             continue
 
         raw_value = str(competitor.get("score", "")).strip()
+        missed_cut = raw_indicates_missed_cut(raw_value) or status_indicates_missed_cut(competitor)
+        cleaned = strip_cut_markers_for_score_parse(raw_value)
+        parsed_score = parse_score_text(cleaned)
         golfers[normalize_name(display_name)] = GolferScore(
             display_name=display_name,
-            score=parse_score_text(raw_value),
+            score=parsed_score,
             raw_value=raw_value,
             fetched_at=fetched_at,
+            missed_cut=missed_cut,
         )
 
     return golfers, event_status
@@ -412,6 +640,8 @@ def scores_changed(new_scores: Dict[str, GolferScore], old_scores: Dict[str, Gol
         if old_item is None:
             return True
         if new_item.raw_value != old_item.raw_value:
+            return True
+        if new_item.missed_cut != old_item.missed_cut:
             return True
     return False
 
@@ -456,7 +686,11 @@ def build_friend_scores(
 
     records = []
 
-    valid_live = {k: v for k, v in live_scores.items() if v.score is not None}
+    valid_live = {
+        k: v
+        for k, v in live_scores.items()
+        if v.score is not None and not v.missed_cut
+    }
     if event_completed and valid_live:
         best_score = min(v.score for v in valid_live.values())
         tournament_winners = {k for k, v in valid_live.items() if v.score == best_score}
@@ -478,11 +712,16 @@ def build_friend_scores(
             score = golfer_live.score if golfer_live else None
             raw_value = golfer_live.raw_value if golfer_live else ""
             display_name = golfer_live.display_name if golfer_live else golfer_name
+            missed_cut = bool(golfer_live and golfer_live.missed_cut)
+            cut_pen = MISS_CUT_PENALTY if missed_cut else 0
+            base = score if score is not None else 0
 
-            if score is None:
+            if score is None and not missed_cut:
                 missing = True
+                pick_contribution = None
             else:
-                total += score
+                pick_contribution = base + cut_pen
+                total += pick_contribution
                 if golfer_key in tournament_winners:
                     winner_bonus_applied = True
 
@@ -490,7 +729,9 @@ def build_friend_scores(
                 {
                     "tier": col,
                     "golfer": display_name,
-                    "score": score,
+                    "strokes_vs_par": score,
+                    "cut_penalty_applied": cut_pen,
+                    "pick_contribution": pick_contribution,
                     "raw_value": raw_value,
                 }
             )
@@ -523,7 +764,9 @@ def flatten_pick_details(friend_scores: pd.DataFrame) -> pd.DataFrame:
                     "Friend": row["Friend"],
                     "Tier": item["tier"],
                     "Golfer": item["golfer"],
-                    "Current Score": item["score"],
+                    "Vs par (ESPN)": item["strokes_vs_par"],
+                    "Cut +10": item["cut_penalty_applied"] if item["cut_penalty_applied"] else None,
+                    "Pick total": item["pick_contribution"],
                     "Raw Website Value": item["raw_value"],
                 }
             )
@@ -551,7 +794,28 @@ def schedule_full_rerun_interval(minutes: int) -> None:
 
 
 
-def render_history_graph(history_df: pd.DataFrame) -> None:
+def render_tier_bracket_table(result: TierComboResult) -> None:
+    st.subheader("Fixed 91-player pool: best & worst lineup")
+    st.caption(
+        "One pick per tier. Totals are the sum of those five scores only (no winner bonus). "
+        "History chart dashed lines use the same bounds at each stored snapshot."
+    )
+    best_row: Dict[str, object] = {"Lineup": "Best possible"}
+    for tier_l, name, sc in result.optimal_picks:
+        best_row[tier_l] = f"{name} ({sc:+d})"
+    best_row["Total"] = result.optimal_total
+    worst_row: Dict[str, object] = {"Lineup": "Worst possible"}
+    for tier_l, name, sc in result.worst_picks:
+        worst_row[tier_l] = f"{name} ({sc:+d})"
+    worst_row["Total"] = result.worst_total
+    cols = ["Lineup"] + TIER_LABELS + ["Total"]
+    st.dataframe(pd.DataFrame([best_row, worst_row])[cols], use_container_width=True, hide_index=True)
+
+
+def render_history_graph(
+    history_df: pd.DataFrame,
+    tier_bounds_df: Optional[pd.DataFrame] = None,
+) -> None:
     st.subheader("Score history")
     if history_df.empty:
         st.info("No history yet. Pull scores once to start building the graph.")
@@ -591,6 +855,12 @@ def render_history_graph(history_df: pd.DataFrame) -> None:
             return
     else:
         plot_df = filtered
+
+    tier_bounds_plot: Optional[pd.DataFrame] = None
+    if tier_bounds_df is not None and not tier_bounds_df.empty:
+        tier_bounds_plot = tier_bounds_df.copy()
+        if window_hours is not None:
+            tier_bounds_plot = tier_bounds_plot[tier_bounds_plot["fetched_at"] >= cutoff]
 
     theme_dark = _streamlit_theme_base() == "dark"
     if theme_dark:
@@ -674,6 +944,29 @@ def render_history_graph(history_df: pd.DataFrame) -> None:
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
     )
+    if tier_bounds_plot is not None and not tier_bounds_plot.empty:
+        opt_color = "rgba(120,200,160,0.85)" if theme_dark else "rgba(30,130,80,0.75)"
+        worst_color = "rgba(255,160,120,0.9)" if theme_dark else "rgba(200,70,40,0.85)"
+        fig.add_trace(
+            go.Scatter(
+                x=tier_bounds_plot["fetched_at"],
+                y=tier_bounds_plot["optimal_total"],
+                mode="lines",
+                name="Best possible (1/tier)",
+                line=dict(dash="dash", width=2.2, color=opt_color),
+                hovertemplate="Best possible: %{y}<extra></extra>",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=tier_bounds_plot["fetched_at"],
+                y=tier_bounds_plot["worst_total"],
+                mode="lines",
+                name="Worst possible (1/tier)",
+                line=dict(dash="dash", width=2.2, color=worst_color),
+                hovertemplate="Worst possible: %{y}<extra></extra>",
+            )
+        )
     st.caption(
         "Tip: click a name in the legend to hide/show that line; double-click a name to show only that person."
     )
@@ -695,7 +988,9 @@ def render_friend_cards(friend_scores: pd.DataFrame) -> None:
         st.info("No picks available to display.")
         return
 
-    display_df = detail_df[["Friend", "Tier", "Golfer", "Current Score", "Raw Website Value"]].copy()
+    display_df = detail_df[
+        ["Friend", "Tier", "Golfer", "Vs par (ESPN)", "Cut +10", "Pick total", "Raw Website Value"]
+    ].copy()
 
     st.markdown("### Picks")
     for friend in friend_scores["Friend"].dropna().astype(str).tolist():
@@ -703,7 +998,11 @@ def render_friend_cards(friend_scores: pd.DataFrame) -> None:
         if one.empty:
             continue
         st.markdown(f"**{friend}**")
-        st.dataframe(one[["Tier", "Golfer", "Current Score", "Raw Website Value"]], use_container_width=True, hide_index=True)
+        st.dataframe(
+            one[["Tier", "Golfer", "Vs par (ESPN)", "Cut +10", "Pick total", "Raw Website Value"]],
+            use_container_width=True,
+            hide_index=True,
+        )
 
 # -----------------------------
 # Main app
@@ -733,7 +1032,7 @@ def main() -> None:
         st.write("Scoring notes")
         st.write("- Lower total is better")
         st.write("- Winner bonus = -5, but only after the tournament is final")
-        st.write("- Missing Cut Penalty = +10, but later since i don't know how the hell this unnofficial API handles that")
+        st.write(f"- Missed-cut penalty = +{MISS_CUT_PENALTY} to pick total (one time per player) when ESPN marks CUT/MC/MDF")
         st.write("- Live score source = ESPN's unofficial PGA scoreboard JSON")
 
         #if refresh_picks:
@@ -794,10 +1093,12 @@ def main() -> None:
         except Exception as exc:
             status_placeholder.error(f"Failed to pull ESPN Masters scores: {exc}")
 
+    tier_bounds_ts = build_tier_bounds_timeseries(load_golfer_snapshot_history())
+
     if not live_scores:
         st.warning("No live golfer scores have been stored yet. You can still review the picks below, and once you pull scores the leaderboard and graph will populate.")
         friend_scores = build_friend_scores(picks_df, {}, event_completed=False)
-        render_history_graph(load_friend_history())
+        render_history_graph(load_friend_history(), tier_bounds_ts)
         st.markdown("---")
         render_friend_cards(friend_scores)
         return
@@ -809,8 +1110,17 @@ def main() -> None:
     fetched_at = fetched_times[-1] if fetched_times else datetime.now(timezone.utc).isoformat()
     persist_friend_snapshot(friend_scores, fetched_at)
 
+    pool_combo = combo_result_from_live_scores(live_scores)
+    if pool_combo is not None:
+        render_tier_bracket_table(pool_combo)
+    else:
+        st.info(
+            "Fixed-pool best/worst table is hidden until every tier has at least one pool player "
+            "with a numeric score in the ESPN field (names must match ESPN spelling)."
+        )
+
     history_df = load_friend_history()
-    render_history_graph(history_df)
+    render_history_graph(history_df, tier_bounds_ts)
 
     if event_status is not None:
         state_text = event_status.description or event_status.state or "Unknown"
@@ -835,7 +1145,9 @@ def main() -> None:
         st.write(
             "This app stores snapshots in SQLite plus a latest JSON cache so you can build the score-over-time graph. "
             "It now pulls from ESPN's unofficial PGA scoreboard JSON instead of scraping masters.com directly. "
-            "The -5 winner bonus is only applied after ESPN marks the event complete."
+            "The -5 winner bonus is only applied after ESPN marks the event complete. "
+            "Dashed best/worst lines use the fixed 91-player tier list: sum of min or max score per tier (no winner bonus). "
+            "Missed-cut +10 applies only to friend pick scoring, not those reference lines."
         )
 
 
