@@ -1,548 +1,639 @@
 {
-  "jos\u00e9 mar\u00eda olaz\u00e1bal": {
-    "display_name": "Jos\u00e9 Mar\u00eda Olaz\u00e1bal",
-    "score": -1,
-    "raw_value": "-1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+  "sam burns": {
+    "display_name": "Sam Burns",
+    "score": -5,
+    "raw_value": "-5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "rory mcilroy": {
+    "display_name": "Rory McIlroy",
+    "score": -5,
+    "raw_value": "-5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "kurt kitayama": {
+    "display_name": "Kurt Kitayama",
+    "score": -3,
+    "raw_value": "-3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "jason day": {
+    "display_name": "Jason Day",
+    "score": -3,
+    "raw_value": "-3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "patrick reed": {
+    "display_name": "Patrick Reed",
+    "score": -3,
+    "raw_value": "-3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "shane lowry": {
+    "display_name": "Shane Lowry",
+    "score": -2,
+    "raw_value": "-2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "xander schauffele": {
+    "display_name": "Xander Schauffele",
+    "score": -2,
+    "raw_value": "-2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "justin rose": {
+    "display_name": "Justin Rose",
+    "score": -2,
+    "raw_value": "-2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "scottie scheffler": {
+    "display_name": "Scottie Scheffler",
+    "score": -2,
+    "raw_value": "-2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "haotong li": {
     "display_name": "Haotong Li",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "nick taylor": {
+    "display_name": "Nick Taylor",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "tommy fleetwood": {
+    "display_name": "Tommy Fleetwood",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "brian campbell": {
+    "display_name": "Brian Campbell",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "aaron rai": {
+    "display_name": "Aaron Rai",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "jacob bridgeman": {
+    "display_name": "Jacob Bridgeman",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "gary woodland": {
+    "display_name": "Gary Woodland",
+    "score": -1,
+    "raw_value": "-1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "max homa": {
     "display_name": "Max Homa",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "\u00e1ngel cabrera": {
-    "display_name": "\u00c1ngel Cabrera",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "sami v\u00e4lim\u00e4ki": {
-    "display_name": "Sami V\u00e4lim\u00e4ki",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "max greyserman": {
-    "display_name": "Max Greyserman",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "johnny keefer": {
-    "display_name": "Johnny Keefer",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "naoyuki kataoka": {
-    "display_name": "Naoyuki Kataoka",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "rasmus neergaard-petersen": {
-    "display_name": "Rasmus Neergaard-Petersen",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "jackson herrington": {
-    "display_name": "Jackson Herrington",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "charl schwartzel": {
-    "display_name": "Charl Schwartzel",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "ryan fox": {
-    "display_name": "Ryan Fox",
-    "score": 1,
-    "raw_value": "+1",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "aldrich potgieter": {
-    "display_name": "Aldrich Potgieter",
-    "score": 2,
-    "raw_value": "+2",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "carlos ortiz": {
-    "display_name": "Carlos Ortiz",
-    "score": 4,
-    "raw_value": "+4",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "vijay singh": {
-    "display_name": "Vijay Singh",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "rasmus h\u00f8jgaard": {
-    "display_name": "Rasmus H\u00f8jgaard",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "matt mccarty": {
     "display_name": "Matt McCarty",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "kurt kitayama": {
-    "display_name": "Kurt Kitayama",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "kristoffer reitan": {
     "display_name": "Kristoffer Reitan",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "casey jarvis": {
-    "display_name": "Casey Jarvis",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "bubba watson": {
-    "display_name": "Bubba Watson",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "brandon holtz": {
-    "display_name": "Brandon Holtz",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "nico echavarria": {
-    "display_name": "Nico Echavarria",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "cameron smith": {
-    "display_name": "Cameron Smith",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "jake knapp": {
-    "display_name": "Jake Knapp",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "sam burns": {
-    "display_name": "Sam Burns",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "nick taylor": {
-    "display_name": "Nick Taylor",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "keegan bradley": {
     "display_name": "Keegan Bradley",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "ryan gerard": {
     "display_name": "Ryan Gerard",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "jason day": {
-    "display_name": "Jason Day",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "dustin johnson": {
-    "display_name": "Dustin Johnson",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "shane lowry": {
-    "display_name": "Shane Lowry",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "tommy fleetwood": {
-    "display_name": "Tommy Fleetwood",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "patrick reed": {
-    "display_name": "Patrick Reed",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "akshay bhatia": {
-    "display_name": "Akshay Bhatia",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "matt fitzpatrick": {
-    "display_name": "Matt Fitzpatrick",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "bryson dechambeau": {
-    "display_name": "Bryson DeChambeau",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "xander schauffele": {
-    "display_name": "Xander Schauffele",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "russell henley": {
-    "display_name": "Russell Henley",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "hideki matsuyama": {
     "display_name": "Hideki Matsuyama",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "collin morikawa": {
-    "display_name": "Collin Morikawa",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "rory mcilroy": {
-    "display_name": "Rory McIlroy",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "cameron young": {
-    "display_name": "Cameron Young",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "mason howell": {
-    "display_name": "Mason Howell",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "alex noren": {
-    "display_name": "Alex Noren",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "patrick cantlay": {
-    "display_name": "Patrick Cantlay",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "viktor hovland": {
-    "display_name": "Viktor Hovland",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "sungjae im": {
-    "display_name": "Sungjae Im",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "sam stevens": {
     "display_name": "Sam Stevens",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "brian campbell": {
-    "display_name": "Brian Campbell",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "andrew novak": {
-    "display_name": "Andrew Novak",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "tom mckibbin": {
-    "display_name": "Tom McKibbin",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "mike weir": {
-    "display_name": "Mike Weir",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "wyndham clark": {
     "display_name": "Wyndham Clark",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "mateo pulcini": {
-    "display_name": "Mateo Pulcini",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "zach johnson": {
-    "display_name": "Zach Johnson",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "michael kim": {
-    "display_name": "Michael Kim",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "nicolai h\u00f8jgaard": {
-    "display_name": "Nicolai H\u00f8jgaard",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "danny willett": {
-    "display_name": "Danny Willett",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "davis riley": {
-    "display_name": "Davis Riley",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "ethan fang": {
-    "display_name": "Ethan Fang",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "adam scott": {
     "display_name": "Adam Scott",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "brian harman": {
-    "display_name": "Brian Harman",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "daniel berger": {
-    "display_name": "Daniel Berger",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "fred couples": {
-    "display_name": "Fred Couples",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "min woo lee": {
-    "display_name": "Min Woo Lee",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "fifa laopakdee": {
-    "display_name": "Fifa Laopakdee",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "sergio garc\u00eda": {
     "display_name": "Sergio Garc\u00eda",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "aaron rai": {
-    "display_name": "Aaron Rai",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "jacob bridgeman": {
-    "display_name": "Jacob Bridgeman",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "corey conners": {
-    "display_name": "Corey Conners",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "harry hall": {
-    "display_name": "Harry Hall",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "michael brennan": {
     "display_name": "Michael Brennan",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "tyrrell hatton": {
-    "display_name": "Tyrrell Hatton",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "maverick mcnealy": {
-    "display_name": "Maverick McNealy",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "j.j. spaun": {
-    "display_name": "J.J. Spaun",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "jon rahm": {
-    "display_name": "Jon Rahm",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "ludvig \u00e5berg": {
-    "display_name": "Ludvig \u00c5berg",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "chris gotterup": {
     "display_name": "Chris Gotterup",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "justin rose": {
-    "display_name": "Justin Rose",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "jordan spieth": {
     "display_name": "Jordan Spieth",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "brooks koepka": {
     "display_name": "Brooks Koepka",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "justin thomas": {
     "display_name": "Justin Thomas",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
-  },
-  "sepp straka": {
-    "display_name": "Sepp Straka",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "ben griffin": {
     "display_name": "Ben Griffin",
     "score": 0,
     "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
-  "gary woodland": {
-    "display_name": "Gary Woodland",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+  "jake knapp": {
+    "display_name": "Jake Knapp",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
-  "scottie scheffler": {
-    "display_name": "Scottie Scheffler",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+  "dustin johnson": {
+    "display_name": "Dustin Johnson",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
-  "robert macintyre": {
-    "display_name": "Robert MacIntyre",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+  "akshay bhatia": {
+    "display_name": "Akshay Bhatia",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "russell henley": {
+    "display_name": "Russell Henley",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "cameron young": {
+    "display_name": "Cameron Young",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "sepp straka": {
+    "display_name": "Sepp Straka",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "harris english": {
     "display_name": "Harris English",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "jos\u00e9 mar\u00eda olaz\u00e1bal": {
+    "display_name": "Jos\u00e9 Mar\u00eda Olaz\u00e1bal",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "cameron smith": {
+    "display_name": "Cameron Smith",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "matt fitzpatrick": {
+    "display_name": "Matt Fitzpatrick",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "collin morikawa": {
+    "display_name": "Collin Morikawa",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "ethan fang": {
+    "display_name": "Ethan Fang",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "tyrrell hatton": {
+    "display_name": "Tyrrell Hatton",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "j.j. spaun": {
+    "display_name": "J.J. Spaun",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "ludvig \u00e5berg": {
+    "display_name": "Ludvig \u00c5berg",
+    "score": 2,
+    "raw_value": "+2",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "charl schwartzel": {
+    "display_name": "Charl Schwartzel",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "viktor hovland": {
+    "display_name": "Viktor Hovland",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "andrew novak": {
+    "display_name": "Andrew Novak",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "tom mckibbin": {
+    "display_name": "Tom McKibbin",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "zach johnson": {
+    "display_name": "Zach Johnson",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "michael kim": {
+    "display_name": "Michael Kim",
+    "score": 1,
+    "raw_value": "+1",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "corey conners": {
+    "display_name": "Corey Conners",
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "si woo kim": {
     "display_name": "Si Woo Kim",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "score": 3,
+    "raw_value": "+3",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "johnny keefer": {
+    "display_name": "Johnny Keefer",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "jackson herrington": {
+    "display_name": "Jackson Herrington",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "bubba watson": {
+    "display_name": "Bubba Watson",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "bryson dechambeau": {
+    "display_name": "Bryson DeChambeau",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "sungjae im": {
+    "display_name": "Sungjae Im",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "nicolai h\u00f8jgaard": {
+    "display_name": "Nicolai H\u00f8jgaard",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "danny willett": {
+    "display_name": "Danny Willett",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "daniel berger": {
+    "display_name": "Daniel Berger",
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   },
   "marco penge": {
     "display_name": "Marco Penge",
-    "score": 0,
-    "raw_value": "E",
-    "fetched_at": "2026-04-09T12:48:00.917633+00:00"
+    "score": 4,
+    "raw_value": "+4",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "rasmus neergaard-petersen": {
+    "display_name": "Rasmus Neergaard-Petersen",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "ryan fox": {
+    "display_name": "Ryan Fox",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "casey jarvis": {
+    "display_name": "Casey Jarvis",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "mason howell": {
+    "display_name": "Mason Howell",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "alex noren": {
+    "display_name": "Alex Noren",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "patrick cantlay": {
+    "display_name": "Patrick Cantlay",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "harry hall": {
+    "display_name": "Harry Hall",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "maverick mcnealy": {
+    "display_name": "Maverick McNealy",
+    "score": 5,
+    "raw_value": "+5",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "rasmus h\u00f8jgaard": {
+    "display_name": "Rasmus H\u00f8jgaard",
+    "score": 6,
+    "raw_value": "+6",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "fred couples": {
+    "display_name": "Fred Couples",
+    "score": 6,
+    "raw_value": "+6",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "min woo lee": {
+    "display_name": "Min Woo Lee",
+    "score": 6,
+    "raw_value": "+6",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "jon rahm": {
+    "display_name": "Jon Rahm",
+    "score": 6,
+    "raw_value": "+6",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "\u00e1ngel cabrera": {
+    "display_name": "\u00c1ngel Cabrera",
+    "score": 7,
+    "raw_value": "+7",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "max greyserman": {
+    "display_name": "Max Greyserman",
+    "score": 7,
+    "raw_value": "+7",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "vijay singh": {
+    "display_name": "Vijay Singh",
+    "score": 7,
+    "raw_value": "+7",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "nico echavarria": {
+    "display_name": "Nico Echavarria",
+    "score": 7,
+    "raw_value": "+7",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "brian harman": {
+    "display_name": "Brian Harman",
+    "score": 7,
+    "raw_value": "+7",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "carlos ortiz": {
+    "display_name": "Carlos Ortiz",
+    "score": 8,
+    "raw_value": "+8",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "sami v\u00e4lim\u00e4ki": {
+    "display_name": "Sami V\u00e4lim\u00e4ki",
+    "score": 8,
+    "raw_value": "+8",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "fifa laopakdee": {
+    "display_name": "Fifa Laopakdee",
+    "score": 8,
+    "raw_value": "+8",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "robert macintyre": {
+    "display_name": "Robert MacIntyre",
+    "score": 8,
+    "raw_value": "+8",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "brandon holtz": {
+    "display_name": "Brandon Holtz",
+    "score": 9,
+    "raw_value": "+9",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "mike weir": {
+    "display_name": "Mike Weir",
+    "score": 9,
+    "raw_value": "+9",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "mateo pulcini": {
+    "display_name": "Mateo Pulcini",
+    "score": 9,
+    "raw_value": "+9",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "davis riley": {
+    "display_name": "Davis Riley",
+    "score": 10,
+    "raw_value": "+10",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "naoyuki kataoka": {
+    "display_name": "Naoyuki Kataoka",
+    "score": 12,
+    "raw_value": "+12",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
+  },
+  "aldrich potgieter": {
+    "display_name": "Aldrich Potgieter",
+    "score": 12,
+    "raw_value": "+12",
+    "fetched_at": "2026-04-10T00:14:54.185441+00:00",
+    "missed_cut": false
   }
 }

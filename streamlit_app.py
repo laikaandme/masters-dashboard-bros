@@ -32,6 +32,7 @@ DATA_DIR.mkdir(exist_ok=True)
 DEFAULT_PICKS_FILE = APP_DIR / "Masters Pickem.csv"
 DB_PATH = DATA_DIR / "masters_history.sqlite3"
 STATE_PATH = DATA_DIR / "latest_scores.json"
+WINNER_BONUS_STATE_PATH = DATA_DIR / "masters_winner_bonus_eligible.json"
 ESPN_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard"
 TOURNAMENT_NAME = "Masters Tournament"
 POLL_MINUTES = 10
@@ -344,6 +345,7 @@ class EventStatus:
     tournament_name: str
     event_id: Optional[str]
     state: str
+    type_name: str
     description: str
     detail: str
     completed: bool
@@ -427,6 +429,55 @@ def load_latest_scores() -> Dict[str, GolferScore]:
     except Exception:
         return {}
 
+
+def load_winner_bonus_eligible() -> bool:
+    if not WINNER_BONUS_STATE_PATH.exists():
+        return False
+    try:
+        raw = json.loads(WINNER_BONUS_STATE_PATH.read_text(encoding="utf-8"))
+        return bool(raw.get("eligible", False))
+    except Exception:
+        return False
+
+
+def save_winner_bonus_eligible(eligible: bool) -> None:
+    payload = {
+        "eligible": eligible,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+    WINNER_BONUS_STATE_PATH.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def event_status_allows_winner_bonus(es: EventStatus) -> bool:
+    """
+    ESPN sets completed=True for each round's 'Play Complete' (e.g. Round 1).
+    Only treat the tournament as decided when the event is truly finished so the -5
+    bonus applies solely to the actual champion(s).
+    """
+    if not es.completed:
+        return False
+    if (es.state or "").lower() != "post":
+        return False
+    tn = (es.type_name or "").upper()
+    detail = (es.detail or "").upper()
+    desc = (es.description or "").upper()
+
+    if tn == "STATUS_PLAY_COMPLETE":
+        if "PLAYOFF" in detail:
+            return True
+        if re.search(r"ROUND\s*4", detail) or "FINAL ROUND" in detail:
+            return True
+        if re.search(r"ROUND\s*[123]\b", detail):
+            return False
+        return "OFFICIAL" in detail or "OFFICIAL" in desc or "FINAL" in desc
+
+    if any(x in tn for x in ("FINAL", "OFFICIAL", "END", "COMPLETE")):
+        return True
+    if "OFFICIAL" in detail or "OFFICIAL" in desc:
+        return True
+    if "FINAL ROUND" in detail or re.search(r"ROUND\s*4", detail):
+        return True
+    return False
 
 
 def latest_snapshot_time() -> Optional[str]:
@@ -597,6 +648,7 @@ def extract_scores_from_espn(payload: dict) -> Tuple[Dict[str, GolferScore], Eve
         tournament_name=str(masters_event.get("name", TOURNAMENT_NAME)),
         event_id=masters_event.get("id"),
         state=str(type_info.get("state", "")),
+        type_name=str(type_info.get("name", "")),
         description=str(type_info.get("description", "")),
         detail=str(type_info.get("detail", "")),
         completed=bool(type_info.get("completed", False)),
@@ -679,7 +731,7 @@ def scores_need_refresh(scores: Dict[str, GolferScore], poll_minutes: int) -> bo
 def build_friend_scores(
     picks_df: pd.DataFrame,
     live_scores: Dict[str, GolferScore],
-    event_completed: bool = False,
+    tournament_final_for_bonus: bool = False,
 ) -> pd.DataFrame:
     friend_col = find_friend_column(picks_df)
     tier_cols = find_tier_columns(picks_df, friend_col)
@@ -691,7 +743,7 @@ def build_friend_scores(
         for k, v in live_scores.items()
         if v.score is not None and not v.missed_cut
     }
-    if event_completed and valid_live:
+    if tournament_final_for_bonus and valid_live:
         best_score = min(v.score for v in valid_live.values())
         tournament_winners = {k for k, v in valid_live.items() if v.score == best_score}
     else:
@@ -1031,7 +1083,7 @@ def main() -> None:
         st.markdown("---")
         st.write("Scoring notes")
         st.write("- Lower total is better")
-        st.write("- Winner bonus = -5, but only after the tournament is final")
+        st.write("- Winner bonus = -5, only after ESPN shows the tournament is fully final (not after each round)")
         st.write(f"- Missed-cut penalty = +{MISS_CUT_PENALTY} to pick total (one time per player) when ESPN marks CUT/MC/MDF")
         st.write("- Live score source = ESPN's unofficial PGA scoreboard JSON")
 
@@ -1097,14 +1149,21 @@ def main() -> None:
 
     if not live_scores:
         st.warning("No live golfer scores have been stored yet. You can still review the picks below, and once you pull scores the leaderboard and graph will populate.")
-        friend_scores = build_friend_scores(picks_df, {}, event_completed=False)
+        friend_scores = build_friend_scores(picks_df, {}, tournament_final_for_bonus=False)
         render_history_graph(load_friend_history(), tier_bounds_ts)
         st.markdown("---")
         render_friend_cards(friend_scores)
         return
 
-    event_completed = bool(event_status.completed) if event_status else False
-    friend_scores = build_friend_scores(picks_df, live_scores, event_completed=event_completed)
+    if event_status is not None:
+        winner_bonus_eligible = event_status_allows_winner_bonus(event_status)
+        save_winner_bonus_eligible(winner_bonus_eligible)
+    else:
+        winner_bonus_eligible = load_winner_bonus_eligible()
+
+    friend_scores = build_friend_scores(
+        picks_df, live_scores, tournament_final_for_bonus=winner_bonus_eligible
+    )
 
     fetched_times = sorted({v.fetched_at for v in live_scores.values() if v.fetched_at})
     fetched_at = fetched_times[-1] if fetched_times else datetime.now(timezone.utc).isoformat()
@@ -1145,7 +1204,7 @@ def main() -> None:
         st.write(
             "This app stores snapshots in SQLite plus a latest JSON cache so you can build the score-over-time graph. "
             "It now pulls from ESPN's unofficial PGA scoreboard JSON instead of scraping masters.com directly. "
-            "The -5 winner bonus is only applied after ESPN marks the event complete. "
+            "The -5 winner bonus applies only when ESPN indicates the tournament is fully final (not after each round's 'play complete'). "
             "Dashed best/worst lines use the fixed 91-player tier list: sum of min or max score per tier (no winner bonus). "
             "Missed-cut +10 applies only to friend pick scoring, not those reference lines."
         )
